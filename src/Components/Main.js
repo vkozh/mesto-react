@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../utils/api";
+import Card from "./Card";
 import ImagePopup from "./ImagePopup";
 import PopupWithForm from "./PopupWithForm";
 
 export default function Main(props) {
+  const [userName, setUserName] = useState("");
+  const [userDescription, setUserDescription] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    api.getUser().then(({ name, about, avatar }) => {
+      setUserName(name);
+      setUserDescription(about);
+      setUserAvatar(avatar);
+    });
+    api.getCards().then((c) => setCards(c));
+  });
+
   return (
     <main>
       <section className="profile container__profile">
         <div className="profile__avatar-wrapper">
-          <img className="profile__avatar" src="/" alt="Аватарка" />
+          <img className="profile__avatar" src={userAvatar} alt="Аватарка" />
           <button
             className="profile__edit-avatar-button"
             type="button"
@@ -16,14 +32,14 @@ export default function Main(props) {
         </div>
         <div className="profile__info">
           <div className="profile__name">
-            <h1 className="profile__name-text">Жак Ив Кусто</h1>
+            <h1 className="profile__name-text">{userName}</h1>
             <button
               className="profile__edit-button"
               type="button"
               onClick={props.onEditProfile}
             ></button>
           </div>
-          <p className="profile__about-me"></p>
+          <p className="profile__about-me">{userDescription}</p>
         </div>
         <button
           className="profile__add-button"
@@ -32,7 +48,11 @@ export default function Main(props) {
         ></button>
       </section>
 
-      <section className="elements container__elements"></section>
+      <section className="elements container__elements">
+        {cards.map((card) => (
+          <Card card={card} key={card._id} onCardClick={props.onCardClick} />
+        ))}
+      </section>
 
       <PopupWithForm
         isOpen={props.isEditProfilePopupOpen}
@@ -111,7 +131,7 @@ export default function Main(props) {
         <span className="popup__input-error link-input-error"></span>
       </PopupWithForm>
 
-      <ImagePopup />
+      <ImagePopup onClose={props.onClose} card={props.selectedCard} />
 
       <PopupWithForm name="delete-card">
         <h2 className="popup__title popup__title_space_small">Вы уверены?</h2>
