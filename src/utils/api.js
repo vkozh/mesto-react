@@ -5,21 +5,14 @@ class Api {
   }
 
   _fetch(path, method, bodyObject, form) {
-    if (bodyObject === undefined) {
-      return fetch(`${this._url}${path}`, {
-        method: method,
-        headers: this._headers,
-      }).then(this._checkResponse);
-    } else {
-      form.renderLoading(true);
-      return fetch(`${this._url}${path}`, {
-        method: method,
-        headers: this._headers,
-        body: JSON.stringify(bodyObject),
-      })
-        .then(this._checkResponse)
-        .finally(() => form.renderLoading(false));
-    }
+    form?.renderLoading(true);
+    return fetch(`${this._url}${path}`, {
+      method: method,
+      headers: this._headers,
+      body: bodyObject ? JSON.stringify(bodyObject) : undefined,
+    })
+      .then(this._checkResponse)
+      .finally(() => form?.renderLoading(false));
   }
 
   _checkResponse(res) {
