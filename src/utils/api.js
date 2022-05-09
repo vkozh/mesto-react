@@ -56,13 +56,19 @@ class Api {
     return this._fetch(`/cards/${cardId}`, "DELETE");
   }
 
-  setLike(cardId) {
-    return this._fetch(`/cards/${cardId}/likes`, "PUT");
+  changeLikeCardStatus(cardId, isLiked) {
+    return isLiked
+      ? this._fetch(`/cards/${cardId}/likes`, "PUT")
+      : this._fetch(`/cards/${cardId}/likes`, "DELETE");
   }
 
-  deleteLike(cardId) {
-    return this._fetch(`/cards/${cardId}/likes`, "DELETE");
-  }
+  // setLike(cardId) {
+  //   return this._fetch(`/cards/${cardId}/likes`, "PUT");
+  // }
+
+  // deleteLike(cardId) {
+  //   return this._fetch(`/cards/${cardId}/likes`, "DELETE");
+  // }
 
   changeAvatar(avatar, form) {
     return this._fetch(
