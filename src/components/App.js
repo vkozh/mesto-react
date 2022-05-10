@@ -6,6 +6,7 @@ import ImagePopup from "./ImagePopup";
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
+import EditProfilePopup from "./EditProfilePopup";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -31,11 +32,21 @@ function App() {
   useEffect(() => {
     api
       .getUser()
-      .then(({ name, about, avatar, _id }) => {
-        setCurrentUser({ name, about, avatar, _id });
+      .then((data) => {
+        setCurrentUser(data);
       })
       .catch((err) => console.log(`Ошибка ${err}`));
   }, []);
+
+  function handleUpdateUser(name, about) {
+    api
+      .editProfile(name, about)
+      .then((data) => {
+        console.log(data);
+        setCurrentUser(data);
+      })
+      .catch((err) => console.log(`Ошибка ${err}`));
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -48,35 +59,12 @@ function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
-        <PopupWithForm
+
+        <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
-          name="edit-profile"
-          title="Редактировать профиль"
           onClose={closeAllPopups}
-        >
-          <input
-            id="name-input"
-            className="popup__input popup__input_type_name"
-            type="text"
-            placeholder="Имя"
-            name="name"
-            minLength="2"
-            maxLength="40"
-            required
-          />
-          <span className="popup__input-error name-input-error"></span>
-          <input
-            id="job-input"
-            className="popup__input popup__input_type_job"
-            type="text"
-            placeholder="О себе"
-            name="job"
-            minLength="2"
-            maxLength="200"
-            required
-          />
-          <span className="popup__input-error job-input-error"></span>
-        </PopupWithForm>
+          onUpdateUser={handleUpdateUser}
+        />
 
         <PopupWithForm
           isOpen={isEditAvatarPopupOpen}

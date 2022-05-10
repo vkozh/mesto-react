@@ -32,6 +32,15 @@ export default function Main({
       );
   }
 
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards(cards.filter((c) => c !== card));
+      })
+      .catch((err) => console.log(`Ошибка ${err}`));
+  }
+
   return (
     <main>
       <section className="profile container__profile">
@@ -72,6 +81,7 @@ export default function Main({
             key={card._id}
             onCardClick={onCardClick}
             onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
           />
         ))}
       </section>

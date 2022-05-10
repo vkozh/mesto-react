@@ -62,14 +62,6 @@ class Api {
       : this._fetch(`/cards/${cardId}/likes`, "DELETE");
   }
 
-  // setLike(cardId) {
-  //   return this._fetch(`/cards/${cardId}/likes`, "PUT");
-  // }
-
-  // deleteLike(cardId) {
-  //   return this._fetch(`/cards/${cardId}/likes`, "DELETE");
-  // }
-
   changeAvatar(avatar, form) {
     return this._fetch(
       "/users/me/avatar",

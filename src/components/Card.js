@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export default function Card({ card, onCardClick, onCardLike }) {
+export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
-  const isOwn = card.owner === currentUser._id;
+  const isOwn = card.owner._id === currentUser._id;
   const isLiked = card.likes.some((i) => i._id === currentUser._id);
   const cardDeleteButtonClassName = `element__trash ${
     isOwn ? "" : "element__trash_hidden"
@@ -13,10 +13,15 @@ export default function Card({ card, onCardClick, onCardLike }) {
   }`;
   const handleClick = () => onCardClick(card);
   const handleLikeClick = () => onCardLike(card);
+  const handleCardDelete = () => onCardDelete(card);
 
   return (
     <article className="element">
-      <button className={cardDeleteButtonClassName} type="button"></button>
+      <button
+        className={cardDeleteButtonClassName}
+        type="button"
+        onClick={handleCardDelete}
+      ></button>
       <img
         className="element__img"
         src={card.link}
