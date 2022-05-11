@@ -3,16 +3,16 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 
 export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const [state, setState] = useState({ name: "", about: "" });
+  const [user, setUser] = useState({ name: "", about: "" });
   const currentUser = useContext(CurrentUserContext);
   const handleChange = (e) =>
-    setState({ ...state, [e.target.name]: e.target.value });
+    setUser({ ...user, [e.target.name]: e.target.value });
   useEffect(() => {
-    setState({ name: currentUser.name, about: currentUser.about });
+    setUser({ name: currentUser.name, about: currentUser.about });
   }, [currentUser]);
   function handleSubmit(e) {
     e.preventDefault();
-    onUpdateUser(state.name, state.about);
+    onUpdateUser(user.name, user.about);
   }
 
   return (
@@ -32,7 +32,7 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         minLength="2"
         maxLength="40"
         required
-        value={state.name || ""}
+        value={user.name || ""}
         onChange={handleChange}
       />
       <span className="popup__input-error name-input-error"></span>
@@ -45,7 +45,7 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         minLength="2"
         maxLength="200"
         required
-        value={state.about || ""}
+        value={user.about || ""}
         onChange={handleChange}
       />
       <span className="popup__input-error job-input-error"></span>

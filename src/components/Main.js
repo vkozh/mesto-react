@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import api from "../utils/api";
 import Card from "./Card";
 
 export default function Main({
@@ -8,38 +7,11 @@ export default function Main({
   onEditAvatar,
   onAddPlace,
   onCardClick,
+  onCardLike,
+  onCardDelete,
+  cards,
 }) {
-  const [cards, setCards] = useState([]);
   const currentUser = useContext(CurrentUserContext);
-
-  useEffect(() => {
-    api
-      .getCards()
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch((err) => console.log(`Ошибка ${err}`));
-  }, []);
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    api
-      .changeLikeCardStatus(card._id, !isLiked)
-      .then((newCard) =>
-        setCards((state) =>
-          state.map((c) => (c._id === card._id ? newCard : c))
-        )
-      );
-  }
-
-  function handleCardDelete(card) {
-    api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards(cards.filter((c) => c !== card));
-      })
-      .catch((err) => console.log(`Ошибка ${err}`));
-  }
 
   return (
     <main>
@@ -80,8 +52,8 @@ export default function Main({
             card={card}
             key={card._id}
             onCardClick={onCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
           />
         ))}
       </section>
