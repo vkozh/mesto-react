@@ -14,7 +14,7 @@ export default function EditProfilePopup({
     setUser({ ...user, [e.target.name]: e.target.value });
   useEffect(() => {
     setUser({ name: currentUser.name, about: currentUser.about });
-  }, [currentUser]);
+  }, [currentUser, isOpen]);
   function handleSubmit(e) {
     e.preventDefault();
     onUpdateUser(user.name, user.about);

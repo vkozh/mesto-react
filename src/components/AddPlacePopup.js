@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 export default function AddPlacePopup({
@@ -14,6 +14,11 @@ export default function AddPlacePopup({
     e.preventDefault();
     onAddPlace(newCard);
   }
+
+  useEffect(() => {
+    setNewCard({ name: "", link: "" });
+  }, [isOpen]);
+
   return (
     <PopupWithForm
       isOpen={isOpen}

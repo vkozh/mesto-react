@@ -55,17 +55,21 @@ function App() {
   function handleUpdateUser(name, about) {
     api
       .editProfile(name, about, renderLoading)
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
       .catch((err) => console.log(`Ошибка ${err}`));
-    closeAllPopups();
   }
 
   function handleUpadteAvatar(avatar) {
     api
       .changeAvatar(avatar, renderLoading)
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
       .catch((err) => console.log(`Ошибка ${err}`));
-    closeAllPopups();
   }
 
   function handleCardLike(card) {
@@ -76,7 +80,8 @@ function App() {
         setCards((state) =>
           state.map((c) => (c._id === card._id ? newCard : c))
         )
-      );
+      )
+      .catch((err) => console.log(`Ошибка ${err}`));
   }
 
   function handleCardDelete(card) {
@@ -84,17 +89,19 @@ function App() {
       .deleteCard(card._id)
       .then(() => {
         setCards(cards.filter((c) => c !== card));
+        closeAllPopups();
       })
       .catch((err) => console.log(`Ошибка ${err}`));
-    closeAllPopups();
   }
 
   function handleAddPlaceSubmit({ name, link }) {
     api
       .addCard(name, link, renderLoading)
-      .then((newCard) => setCards([newCard, ...cards]))
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
       .catch((err) => console.log(`Ошибка ${err}`));
-    closeAllPopups();
   }
 
   function renderLoading(isLoading) {

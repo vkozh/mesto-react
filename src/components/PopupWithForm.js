@@ -21,7 +21,6 @@ export default function PopupWithForm({
         <form
           className="popup__form"
           name={`popup${name}Form`}
-          noValidate
           onSubmit={onSubmit}
         >
           {children}
