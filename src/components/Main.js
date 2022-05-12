@@ -8,7 +8,7 @@ export default function Main({
   onAddPlace,
   onCardClick,
   onCardLike,
-  onCardDelete,
+  onCardTrash,
   cards,
 }) {
   const currentUser = useContext(CurrentUserContext);
@@ -53,7 +53,7 @@ export default function Main({
             key={card._id}
             onCardClick={onCardClick}
             onCardLike={onCardLike}
-            onCardDelete={onCardDelete}
+            onCardTrash={onCardTrash}
           />
         ))}
       </section>

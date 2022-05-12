@@ -7,7 +7,7 @@ export default function PopupWithForm({
   onClose,
   children,
   onSubmit,
-  buttonText = "Сохранить",
+  buttonText,
 }) {
   return (
     <div className={`popup popup_type_${name} ${isOpen ? "popup_opened" : ""}`}>

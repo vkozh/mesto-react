@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+export default function AddPlacePopup({
+  isOpen,
+  onClose,
+  onAddPlace,
+  buttonText,
+}) {
   const [newCard, setNewCard] = useState({ name: "", link: "" });
   const handleChange = (e) =>
     setNewCard({ ...newCard, [e.target.name]: e.target.value });
@@ -15,7 +20,7 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name="edit-add-card"
       title="Новое место"
       onClose={onClose}
-      buttonText="Создать"
+      buttonText={buttonText || "Создать"}
       onSubmit={handleSubmit}
     >
       <input

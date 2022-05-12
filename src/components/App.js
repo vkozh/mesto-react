@@ -3,12 +3,12 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import ImagePopup from "./ImagePopup";
-import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import DeleteCardPopup from "./DeleteCardPopup";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -18,11 +18,15 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-
+  const [buttonText, setButtonText] = useState();
+  const [deleteCard, setDeleteCard] = useState({});
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
   const handleEditAvatarClick = () => setIsEditAvatarPopupOpen(true);
-  const handleEditCardTrashClick = () => setIsDeleteCardPopupOpen(true);
+  const handleCardTrashClick = (card) => {
+    setDeleteCard(card);
+    setIsDeleteCardPopupOpen(true);
+  };
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -50,7 +54,7 @@ function App() {
 
   function handleUpdateUser(name, about) {
     api
-      .editProfile(name, about)
+      .editProfile(name, about, renderLoading)
       .then((data) => setCurrentUser(data))
       .catch((err) => console.log(`Ошибка ${err}`));
     closeAllPopups();
@@ -58,7 +62,7 @@ function App() {
 
   function handleUpadteAvatar(avatar) {
     api
-      .changeAvatar(avatar)
+      .changeAvatar(avatar, renderLoading)
       .then((data) => setCurrentUser(data))
       .catch((err) => console.log(`Ошибка ${err}`));
     closeAllPopups();
@@ -82,14 +86,19 @@ function App() {
         setCards(cards.filter((c) => c !== card));
       })
       .catch((err) => console.log(`Ошибка ${err}`));
+    closeAllPopups();
   }
 
   function handleAddPlaceSubmit({ name, link }) {
     api
-      .addCard(name, link)
+      .addCard(name, link, renderLoading)
       .then((newCard) => setCards([newCard, ...cards]))
       .catch((err) => console.log(`Ошибка ${err}`));
     closeAllPopups();
+  }
+
+  function renderLoading(isLoading) {
+    isLoading ? setButtonText("Сохранение...") : setButtonText();
   }
 
   return (
@@ -102,7 +111,7 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardTrash={handleCardTrashClick}
           cards={cards}
         />
         <Footer />
@@ -111,12 +120,14 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+          buttonText={buttonText}
         />
 
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpadteAvatar}
+          buttonText={buttonText}
         />
 
         <AddPlacePopup
@@ -124,19 +135,19 @@ function App() {
           name="edit-add-card"
           title="Новое место"
           onClose={closeAllPopups}
-          buttonText="Создать"
           onAddPlace={handleAddPlaceSubmit}
+          buttonText={buttonText}
         />
 
         <ImagePopup onClose={closeAllPopups} card={selectedCard} />
 
-        <PopupWithForm
-          name="delete-card"
-          title="Вы уверены?"
-          buttonText="Да"
+        <DeleteCardPopup
           onClose={closeAllPopups}
+          deleteCard={handleCardDelete}
           isOpen={isDeleteCardPopupOpen}
-        ></PopupWithForm>
+          card={deleteCard}
+          buttonText={buttonText}
+        />
       </div>
     </CurrentUserContext.Provider>
   );

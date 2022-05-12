@@ -4,15 +4,17 @@ class Api {
     this._headers = headers;
   }
 
-  _fetch(path, method, bodyObject, form) {
-    form?.renderLoading(true);
+  _fetch(path, method, bodyObject, renderLoading) {
+    if (renderLoading) renderLoading(true);
     return fetch(`${this._url}${path}`, {
       method: method,
       headers: this._headers,
       body: bodyObject ? JSON.stringify(bodyObject) : undefined,
     })
       .then(this._checkResponse)
-      .finally(() => form?.renderLoading(false));
+      .finally(() => {
+        if (renderLoading) renderLoading(false);
+      });
   }
 
   _checkResponse(res) {
@@ -28,7 +30,7 @@ class Api {
     return this._fetch("/cards", "GET");
   }
 
-  editProfile(name, about, button) {
+  editProfile(name, about, renderLoading) {
     return this._fetch(
       "/users/me",
       "PATCH",
@@ -36,11 +38,11 @@ class Api {
         name: name,
         about: about,
       },
-      button
+      renderLoading
     );
   }
 
-  addCard(name, link, button) {
+  addCard(name, link, renderLoading) {
     return this._fetch(
       "/cards",
       "POST",
@@ -48,7 +50,7 @@ class Api {
         name: name,
         link: link,
       },
-      button
+      renderLoading
     );
   }
 
@@ -62,14 +64,14 @@ class Api {
       : this._fetch(`/cards/${cardId}/likes`, "DELETE");
   }
 
-  changeAvatar(avatar, form) {
+  changeAvatar(avatar, renderLoading) {
     return this._fetch(
       "/users/me/avatar",
       "PATCH",
       {
         avatar: avatar,
       },
-      form
+      renderLoading
     );
   }
 }
